@@ -3,10 +3,10 @@ import {
   getBookActions,
   getUserBooksSummary,
 } from "../controllers/admin.controller";
-
+import { isAdmin } from "../middlewares/auth";
 const router = express.Router();
 
-router.get("/actions", async (req, res) => {
+router.get("/actions", isAdmin, async (req, res) => {
   try {
     await getBookActions(req, res);
   } catch (error) {
@@ -19,7 +19,7 @@ router.get("/actions", async (req, res) => {
   }
 });
 
-router.get("/users/books", async (req, res) => {
+router.get("/users/books", isAdmin, async (req, res) => {
   try {
     await getUserBooksSummary(req, res);
   } catch (error) {

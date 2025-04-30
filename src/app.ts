@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-app.use("/books", bookRoutes);
+app.use("/admin/books", bookRoutes);
 
 app.use("/admin", adminRoutes);
 
