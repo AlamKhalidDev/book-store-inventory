@@ -13,9 +13,9 @@ app.use("/books", bookRoutes);
 
 app.use("/admin", adminRoutes);
 
-app.use("/wallet", walletRoutes);
+app.use("/admin/wallet", walletRoutes);
 
-app.use("/user", userRoutes);
+app.use("/users", userRoutes);
 
 // Example route
 app.get("/", (req, res) => {
