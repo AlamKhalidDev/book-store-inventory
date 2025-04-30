@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Book {
+  id           String   @id @default(uuid())
+  title        String
+  authors      String[] // Stored as array
+  genres       String[] // Stored as array
+  sellPrice    Float
+  stockPrice   Float
+  borrowPrice  Float
+  year         Int
+  pages        Int
+  publisher    String
+  isbn         String   @unique
+  copies       Int
+  initialStock Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  actions      BookAction[]
+  userBooks    UserBook[] 
+}
+
+model Wallet {
+  id        Int              @id @default(1)
+  balance   Float
+  movements WalletMovement[]
+}
+
+model WalletMovement {
+  id        String   @id @default(uuid())
+  type      String   // CREDIT / DEBIT
+  amount    Float
+  reason    String
+  createdAt DateTime @default(now())
+  wallet    Wallet   @relation(fields: [walletId], references: [id]) 
+  walletId  Int
+}
+
+model BookAction {
+  id        String   @id @default(uuid())
+  userEmail String
+  type      ActionType
+  bookId    String
+  book      Book     @relation(fields: [bookId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model UserBook {
+  id        String   @id @default(uuid())
+  userEmail String
+  bookId    String
+  type      ActionType
+  quantity  Int
+  book      Book     @relation(fields: [bookId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+enum ActionType {
+  BORROW
+  RETURN
+  BUY
+  STOCK
+}
