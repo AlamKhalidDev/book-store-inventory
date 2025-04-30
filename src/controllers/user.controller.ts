@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
 import { PrismaClient, ActionType } from "@prisma/client";
+import { checkAndHandleRestock } from "../utils/restock.helper";
+import { scheduleReturnReminder } from "../utils/reminder.helper";
 
 const prisma = new PrismaClient();
 
 export const borrowBook = async (req: Request, res: Response) => {
-  const userEmail = req.headers["x-user-email"]?.toString(); // Simulated user ID
+  const userEmail = req.headers["x-user-email"]?.toString();
   const { bookId } = req.params;
 
   if (!userEmail)
@@ -67,6 +69,8 @@ export const borrowBook = async (req: Request, res: Response) => {
         },
       },
     });
+    await checkAndHandleRestock(bookId);
+    await scheduleReturnReminder(userEmail, bookId);
 
     res.json({ message: "Book borrowed successfully" });
   } catch (error) {
@@ -113,5 +117,93 @@ export const returnBook = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Something went wrong during return" });
+  }
+};
+
+export const buyBook = async (req: Request, res: Response) => {
+  const userEmail = req.headers["x-user-email"]?.toString();
+  const { bookId } = req.params;
+
+  if (!userEmail) return res.status(400).json({ error: "User email required" });
+
+  try {
+    const book = await prisma.book.findUnique({ where: { id: bookId } });
+    if (!book) return res.status(404).json({ error: "Book not found" });
+    if (book.copies < 1)
+      return res.status(400).json({ error: "No available copies to buy" });
+
+    const userBooks = await prisma.userBook.findMany({
+      where: { userEmail, type: ActionType.BUY },
+    });
+
+    const sameBook = userBooks.find((ub) => ub.bookId === bookId);
+    const totalBought = userBooks.reduce((acc, ub) => acc + ub.quantity, 0);
+
+    if (sameBook && sameBook.quantity >= 2)
+      return res
+        .status(400)
+        .json({ error: "Cannot buy more than 2 copies of the same book" });
+
+    if (totalBought >= 10)
+      return res
+        .status(400)
+        .json({ error: "Cannot buy more than 10 books in total" });
+
+    // Decrease book copies
+    await prisma.book.update({
+      where: { id: bookId },
+      data: { copies: { decrement: 1 } },
+    });
+
+    // Log BUY action
+    await prisma.bookAction.create({
+      data: {
+        userEmail,
+        bookId,
+        type: ActionType.BUY,
+      },
+    });
+
+    // Update or insert into UserBook
+    if (sameBook) {
+      await prisma.userBook.update({
+        where: { id: sameBook.id },
+        data: {
+          quantity: { increment: 1 },
+        },
+      });
+    } else {
+      await prisma.userBook.create({
+        data: {
+          userEmail,
+          bookId,
+          type: ActionType.BUY,
+          quantity: 1,
+        },
+      });
+    }
+
+    // Wallet CREDIT
+    await prisma.wallet.update({
+      where: { id: 1 },
+      data: {
+        balance: { increment: book.sellPrice },
+        movements: {
+          create: {
+            type: "CREDIT",
+            amount: book.sellPrice,
+            reason: `User bought "${book.title}"`,
+          },
+        },
+      },
+    });
+
+    // Handle restock check
+    await checkAndHandleRestock(bookId);
+
+    res.json({ message: "Book purchased successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error while buying book" });
   }
 };

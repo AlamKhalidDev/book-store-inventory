@@ -73,3 +73,34 @@ export const getBookActions = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to fetch actions" });
   }
 };
+
+export const getUserBooksSummary = async (req: Request, res: Response) => {
+  try {
+    const userBooks = await prisma.userBook.findMany({
+      include: {
+        book: true,
+      },
+    });
+
+    const grouped = userBooks.reduce((acc, record) => {
+      const email = record.userEmail;
+      if (!acc[email]) acc[email] = [];
+
+      acc[email].push({
+        type: record.type, // either 'BORROW' or 'BUY'
+        quantity: record.quantity,
+        bookId: record.book.id,
+        title: record.book.title,
+        authors: record.book.authors,
+        genres: record.book.genres,
+      });
+
+      return acc;
+    }, {} as Record<string, any[]>);
+
+    res.json(grouped);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch user books summary" });
+  }
+};
