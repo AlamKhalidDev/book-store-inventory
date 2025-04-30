@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { sendMail } from "./mailer";
 
 const prisma = new PrismaClient();
 
@@ -10,6 +11,11 @@ export const checkAndHandleRestock = async (bookId: string) => {
     console.log(`[EMAIL SENT] To: management@library.com`);
     console.log(`Subject: Restock "${book.title}"`);
     console.log(`Body: Only 1 copy left. Please restock.`);
+    await sendMail(
+      "management@library.com",
+      "Restock Needed",
+      `Book ${book.title} is low on stock...`
+    );
 
     // Wait 1 hour (simulate with 10 sec in dev)
     setTimeout(async () => {
@@ -51,6 +57,6 @@ export const checkAndHandleRestock = async (bookId: string) => {
           `[STOCKED] ${book.title} - Restocked ${missing} copies after 1 hour`
         );
       }
-    }, 10 * 1000); // replace with 3600 * 1000 for real 1 hour
+    }, 3 * 24 * 3600 * 1000);
   }
 };

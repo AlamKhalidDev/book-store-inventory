@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { sendMail } from "./mailer";
 
 const prisma = new PrismaClient();
 
@@ -14,6 +15,11 @@ export const scheduleReturnReminder = async (
 
     if (stillBorrowed) {
       const book = await prisma.book.findUnique({ where: { id: bookId } });
+      await sendMail(
+        userEmail,
+        `Subject: Reminder to return "${book?.title}"`,
+        "Body: You borrowed this book more than 3 days ago. Please return it ASAP."
+      );
 
       console.log(`[EMAIL SENT] To: ${userEmail}`);
       console.log(`Subject: Reminder to return "${book?.title}"`);
@@ -21,5 +27,5 @@ export const scheduleReturnReminder = async (
         `Body: You borrowed this book more than 3 days ago. Please return it ASAP.`
       );
     }
-  }, 10 * 1000); // Simulate 3 days
+  }, 3 * 24 * 3600 * 1000); // Simulate 3 days
 };
