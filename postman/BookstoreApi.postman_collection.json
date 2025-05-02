@@ -1,0 +1,339 @@
+{
+	"info": {
+		"_postman_id": "1ab6d974-e9f0-41de-9b21-52e8738b7450",
+		"name": "Book Store Inventory",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14763406"
+	},
+	"item": [
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "Get Book actions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-user-email",
+								"value": "admin@dummy-library.com",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://book-store-inventory-jn7w.onrender.com/admin/actions?type=borrow",
+							"protocol": "https",
+							"host": [
+								"book-store-inventory-jn7w",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"admin",
+								"actions"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "borrow"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Book summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-user-email",
+								"value": "admin@dummy-library.com",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://book-store-inventory-jn7w.onrender.com/admin/users/books",
+							"protocol": "https",
+							"host": [
+								"book-store-inventory-jn7w",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"admin",
+								"users",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All books",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>Title</th>\r",
+									"        <th>Authors</th>\r",
+									"        <th>Genres</th>\r",
+									"        <th>Sell Price</th>\r",
+									"        <th>Stock Price</th>\r",
+									"        <th>Borrow Price</th>\r",
+									"        <th>Year</th>\r",
+									"        <th>Pages</th>\r",
+									"        <th>Publisher</th>\r",
+									"        <th>ISBN</th>\r",
+									"        <th>Copies</th>\r",
+									"        <th>Initial Stock</th>\r",
+									"        <th>Created At</th>\r",
+									"        <th>Updated At</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response}}\r",
+									"        <tr>\r",
+									"            <td>{{title}}</td>\r",
+									"            <td>{{authors}}</td>\r",
+									"            <td>{{genres}}</td>\r",
+									"            <td>{{sellPrice}}</td>\r",
+									"            <td>{{stockPrice}}</td>\r",
+									"            <td>{{borrowPrice}}</td>\r",
+									"            <td>{{year}}</td>\r",
+									"            <td>{{pages}}</td>\r",
+									"            <td>{{publisher}}</td>\r",
+									"            <td>{{isbn}}</td>\r",
+									"            <td>{{copies}}</td>\r",
+									"            <td>{{initialStock}}</td>\r",
+									"            <td>{{createdAt}}</td>\r",
+									"            <td>{{updatedAt}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-user-email",
+								"value": "admin@dummy-library.com",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://book-store-inventory-jn7w.onrender.com/admin/books",
+							"protocol": "https",
+							"host": [
+								"book-store-inventory-jn7w",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"admin",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Book by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-user-email",
+								"value": "admin@dummy-library.com",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://book-store-inventory-jn7w.onrender.com/admin/books/18c99f9f-7996-4560-9bf2-c1f198641a84",
+							"protocol": "https",
+							"host": [
+								"book-store-inventory-jn7w",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"admin",
+								"books",
+								"18c99f9f-7996-4560-9bf2-c1f198641a84"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Wallet status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-user-email",
+								"value": "admin@dummy-library.com",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://book-store-inventory-jn7w.onrender.com/admin/wallet",
+							"protocol": "https",
+							"host": [
+								"book-store-inventory-jn7w",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"admin",
+								"wallet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Wallet Movements",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-user-email",
+								"value": "admin@dummy-library.com",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://book-store-inventory-jn7w.onrender.com/admin/wallet/movements",
+							"protocol": "https",
+							"host": [
+								"book-store-inventory-jn7w",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"admin",
+								"wallet",
+								"movements"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "Borrow book",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-user-email",
+								"value": "miansheraaz1@gmail.com",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://book-store-inventory-jn7w.onrender.com/users/borrow/68c63764-3fb6-40b1-a939-4aaf2b0e0c72",
+							"protocol": "https",
+							"host": [
+								"book-store-inventory-jn7w",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"users",
+								"borrow",
+								"68c63764-3fb6-40b1-a939-4aaf2b0e0c72"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buy Book",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-user-email",
+								"value": "a@test.com",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://book-store-inventory-jn7w.onrender.com/users/buy/500a95fc-2910-4f5d-b396-01f0ca685e73",
+							"protocol": "https",
+							"host": [
+								"book-store-inventory-jn7w",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"users",
+								"buy",
+								"500a95fc-2910-4f5d-b396-01f0ca685e73"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Return book",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-user-email",
+								"value": "user@test.com",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://book-store-inventory-jn7w.onrender.com/users/return/dd07ce8c-5577-4bde-a103-86c7b7f58964",
+							"protocol": "https",
+							"host": [
+								"book-store-inventory-jn7w",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"users",
+								"return",
+								"dd07ce8c-5577-4bde-a103-86c7b7f58964"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
