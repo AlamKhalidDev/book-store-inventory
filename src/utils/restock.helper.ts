@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { sendMail } from "./mailer";
 
 const prisma = new PrismaClient();
-
+const ONE_HOUR = 60 * 60 * 1000; // 1 hour in milliseconds
 export const checkAndHandleRestock = async (bookId: string) => {
   const book = await prisma.book.findUnique({ where: { id: bookId } });
   if (!book) return;
@@ -57,6 +57,6 @@ export const checkAndHandleRestock = async (bookId: string) => {
           `[STOCKED] ${book.title} - Restocked ${missing} copies after 1 hour`
         );
       }
-    }, 3 * 24 * 3600 * 1000);
+    }, ONE_HOUR);
   }
 };

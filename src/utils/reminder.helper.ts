@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { sendMail } from "./mailer";
 
 const prisma = new PrismaClient();
-
+const THREE_DAYS = 3 * 24 * 3600 * 1000;
 export const scheduleReturnReminder = async (
   userEmail: string,
   bookId: string
@@ -27,6 +27,6 @@ export const scheduleReturnReminder = async (
         `Body: You borrowed this book more than 3 days ago. Please return it ASAP.`
       );
     }
-  }, 3 * 24 * 3600 * 1000); // Simulate 3 days
+  }, THREE_DAYS); // Simulate 3 days
 };
 //

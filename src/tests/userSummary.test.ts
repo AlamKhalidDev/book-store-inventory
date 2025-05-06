@@ -1,35 +1,3 @@
-// import request from "supertest";
-// import app from "../app"; // Assuming app is exported from app.ts
-
-// describe("User Summary API Tests", () => {
-//   // Test getting the user book summary
-//   it("should get the summary of books borrowed or bought by users", async () => {
-//     const response = await request(app)
-//       .get("/admin/users/books")
-//       .set("Authorization", "Bearer admin@dummy-library.com"); // Admin email
-
-//     expect(response.status).toBe(200);
-//     expect(response.body).toBeDefined();
-//     expect(typeof response.body["user1@example.com"]).toBe("object");
-//     expect(Array.isArray(response.body["user1@example.com"])).toBe(true);
-//   });
-
-//   // Test if the user summary contains the right data
-
-//   it("should include borrowed/bought book details for each user", async () => {
-//     const response = await request(app)
-//       .get("/admin/users/books")
-//       .set("Authorization", "Bearer admin@dummy-library.com"); // Admin email
-
-//     const userSummary = response.body["user1@example.com"];
-//     expect(userSummary).toBeDefined();
-//     expect(userSummary[0].bookId).toBeDefined();
-
-//     expect(["BORROW", "BUY"]).toContain(userSummary[0].type);
-//     expect(userSummary[0].quantity).toBeGreaterThan(0);
-//   });
-// });
-
 import request from "supertest";
 import app from "../app"; // Assuming app is exported from app.ts
 
