@@ -19,8 +19,6 @@ services:
       - db
     ports:
       - "3000:3000"
-    volumes:
-      - .:/app
     env_file:
       - .env
     command: sh -c "npx prisma migrate deploy && npm run start"
